@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\SchoolAndProjects\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\ChatBot.csproj": {}
+    "D:\\School\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\ChatBot.csproj": {}
   },
   "projects": {
-    "D:\\SchoolAndProjects\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\ChatBot.csproj": {
+    "D:\\School\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\ChatBot.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\SchoolAndProjects\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\ChatBot.csproj",
+        "projectUniqueName": "D:\\School\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\ChatBot.csproj",
         "projectName": "ChatBot",
-        "projectPath": "D:\\SchoolAndProjects\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\ChatBot.csproj",
+        "projectPath": "D:\\School\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\ChatBot.csproj",
         "packagesPath": "C:\\Users\\Thoma\\.nuget\\packages\\",
-        "outputPath": "D:\\SchoolAndProjects\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\obj\\",
+        "outputPath": "D:\\School\\Programs\\ETCO 2999 Topics\\lab 1\\ChatBot\\ChatBot\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\ProgramData\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [

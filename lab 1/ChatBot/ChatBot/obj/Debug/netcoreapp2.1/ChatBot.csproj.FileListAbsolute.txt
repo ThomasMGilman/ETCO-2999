@@ -9,3 +9,14 @@ D:\SchoolAndProjects\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\bin\Debug\n
 D:\SchoolAndProjects\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\bin\Debug\netcoreapp2.1\ChatBot.pdb
 D:\SchoolAndProjects\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\obj\Debug\netcoreapp2.1\ChatBot.dll
 D:\SchoolAndProjects\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\obj\Debug\netcoreapp2.1\ChatBot.pdb
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\bin\Debug\netcoreapp2.1\ChatBot.deps.json
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\bin\Debug\netcoreapp2.1\ChatBot.runtimeconfig.json
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\bin\Debug\netcoreapp2.1\ChatBot.runtimeconfig.dev.json
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\bin\Debug\netcoreapp2.1\ChatBot.dll
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\bin\Debug\netcoreapp2.1\ChatBot.pdb
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\obj\Debug\netcoreapp2.1\ChatBot.csprojAssemblyReference.cache
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\obj\Debug\netcoreapp2.1\ChatBot.csproj.CoreCompileInputs.cache
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\obj\Debug\netcoreapp2.1\ChatBot.AssemblyInfoInputs.cache
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\obj\Debug\netcoreapp2.1\ChatBot.AssemblyInfo.cs
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\obj\Debug\netcoreapp2.1\ChatBot.dll
+D:\School\Programs\ETCO 2999 Topics\lab 1\ChatBot\ChatBot\obj\Debug\netcoreapp2.1\ChatBot.pdb
