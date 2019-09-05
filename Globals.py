@@ -14,11 +14,19 @@ lastMsg = 0.0
 connected = False
 EveryoneFired = False
 
-tLock = threading.RLock()
+tLock = threading.Lock()
 
 def printLockmsg(msg):
-    with tLock:
-        print(msg)
+    tLock.acquire()
+    print(msg)
+    tLock.release()
+
 
 def getWorkerCount():
     return threadCount
+
+def getmsg():
+    if botQue is None or botQue.qsize() <=0:
+        return None
+    else:
+        return botQue.get()

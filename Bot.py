@@ -1,6 +1,6 @@
 import socket
 import Globals
-import queue
+import threading
 import re
 
 class bot:
@@ -9,7 +9,6 @@ class bot:
     def __init__(self, cfg):
         # create socket
         self.botSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.botSocket.settimeout(1)
         self.cfg = cfg
 
     def closeSocket(self):
@@ -19,7 +18,7 @@ class bot:
         self.botSocket.send((msg+"\r\n").encode('utf-8'))
 
     def recv(self):
-        Globals.printLockmsg("Worker Hired")
+        Globals.printLockmsg("Worker Hired threadIdentity: {0}".format(threading.current_thread().getName()))
         with Globals.tLock:
             Globals.threadCount += 1
 
@@ -31,8 +30,10 @@ class bot:
                     self.keepAlive()
                 else:
                     Globals.botQue.put(response)
+                Globals.printLockmsg("Got msg: {0} QueSize: {1}".format(response, Globals.botQue.qsize()))
             except Exception as e:
-                Globals.printLockmsg("Got error: ".format(str(e)))
+                None
+                #Globals.printLockmsg("Got error: ".format(str(e)))
 
             Globals.tLock.acquire()
             if Globals.EveryoneFired:
@@ -65,6 +66,7 @@ class bot:
             self.sendMsg("NICK {0}".format(self.cfg.BOT_USERNAME))
             self.sendMsg("JOIN #{0}".format(self.cfg.CHANNEL))
             self.announceArrival()
+            self.botSocket.settimeout(10.0)
 
             return True
         except Exception as e:
@@ -72,26 +74,24 @@ class bot:
             return False
 
     def handleMsg(self):
-        Globals.printLockmsg("Messanger hired")
-        with Globals.tLock:
-            Globals.threadCount += 1
+        #Globals.printLockmsg("Messanger hired")
 
         if not Globals.botQue.empty():
-            response = Globals.botQue.pop(0)
+            response = Globals.getmsg()
             user = re.search(r"\w+", response).group()
             message = self.cfg.MSG_PATTERN.sub("", response).strip()
 
-            Globals.printLockmsg("{0}: {1}".format(user, message))
+            Globals.printLockmsg("\n{0}: {1}".format(user, message))
             if (message.startswith("$Hello")):
                 self.channelResponse("HI!!!")
             elif (message.startswith("$ColorTxt")):
                 self.channelResponse("/me this is color text!!!")
             elif (message.startswith("$ByeFriend")):
-                Globals.tLock.acquire()
-                Globals.printLockmsg("YOUR ALL FIRED!!!")
-                Globals.EveryoneFired = False
-                Globals.Connected = False
-                Globals.tLock.release()
+                with Globals.tLock:
+                    Globals.printLockmsg("YOUR ALL FIRED!!!")
+                    Globals.Connected = False
+                    Globals.EveryoneFired = False
+
                 self.channelResponse("GoodBye Friends")
                 self.channelResponse("/disconnect")
             elif (message.startswith("$cleanUp")):
@@ -100,4 +100,4 @@ class bot:
         with Globals.tLock:
             Globals.threadCount -= 1
 
-        Globals.printLockmsg("Messanger put out of their missery violently with a shot to the head")
+        Globals.printLockmsg("Messanger put out of their missery violently with a shot to the head\n\n")
