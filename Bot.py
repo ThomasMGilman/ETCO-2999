@@ -1,6 +1,7 @@
 import socket
 import Globals
 import threading
+import requests
 import re
 
 class bot:
@@ -55,6 +56,9 @@ class bot:
     def channelResponse(self, msg):
         self.sendMsg("PRIVMSG #{0} :{1}".format(self.cfg.CHANNEL, msg))
 
+    def privateResponse(self, User, msg):
+        self.sendMsg("PRIVMSG #{0} :{1}".format(User, msg))
+
     def keepAlive(self):
         self.sendMsg("PONG :tmi.twitch.tv")
 
@@ -74,7 +78,6 @@ class bot:
             return False
 
     def handleMsg(self):
-        #Globals.printLockmsg("Messanger hired")
 
         if not Globals.botQue.empty():
             response = Globals.getmsg()
@@ -95,9 +98,38 @@ class bot:
                 self.channelResponse("GoodBye Friends")
                 self.channelResponse("/disconnect")
             elif (message.startswith("$cleanUp")):
-                self.channelResponse("/clean")
+                self.channelResponse("/clear")
                 self.channelResponse("All clean!")
+            elif(message.startswith("$recentClip")):
+                try:
+                    url = "https://api.twitch.tv/helix/clips?"+self.cfg.CHANNEL+"="
+                    clipIndex = message[re.search(r"\d", message).start():]
+                    Globals.printLockmsg("got: "+clipIndex)
+                    req = requests.get(url, headers={'Client-ID' : self.cfg.CLIENT_ID})
+                    data = req.json()
+                    Globals.printLockmsg(data)
+                except Exception as e:
+                    Globals.printLockmsg(e)
+            elif (message.startswith("$topGames")):
+                try:
+                    url = "https://api.twitch.tv/helix/games/top"
+                    req = requests.get(url, headers={'Client-ID': self.cfg.CLIENT_ID})
+                    data = req.json()['data']
+                    Globals.printLockmsg(data)
+                except Exception as e:
+                    Globals.printLockmsg(e)
+            elif (message.startswith("$Game")):
+                try:
+                    gameName = message[re.search(r"\s\w+", message).start()+1:]
+                    url = "https://api.twitch.tv/helix/games?name="+gameName
+                    req = requests.get(url, headers={'Client-ID': self.cfg.CLIENT_ID})
+                    data = req.json()['data']
+                    msg = ""
+                    for i in range(len(data)):
+                        msg += str(i) + ": \n\tID:" + data[i][0] + " Name: " + data[i][1] + "\n"  # appendName List
+                    self.privateResponse(user, msg)
+                    Globals.printLockmsg(data)
+                except Exception as e:
+                    Globals.printLockmsg(e)
         with Globals.tLock:
             Globals.threadCount -= 1
-
-        Globals.printLockmsg("Messanger put out of their missery violently with a shot to the head\n\n")

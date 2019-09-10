@@ -5,7 +5,7 @@ import threading
 import Globals
 
 def main():
-    cfg = CFG.chatConnection(Globals.HOST, Globals.PORT, Globals.OAUTH, Globals.USERNAME, Globals.CHANNEL)
+    cfg = CFG.chatConnection(Globals.HOST, Globals.PORT, Globals.OAUTH, Globals.USERNAME, Globals.CHANNEL, Globals.CLIENT_ID)
     lastMsg = time.time()
     Globals.tLock = threading.Lock()
     try:

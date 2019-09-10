@@ -6,6 +6,7 @@ PORT = 6667
 OAUTH = "w74fi7jcegv41r2b2x25ktidpyb7vq"
 USERNAME = "bFriend"
 CHANNEL = "nilkin1"
+CLIENT_ID = 'e5ynnitdgyrp79prsv47rm9cuhxwvu'
 
 threadCount = 0
 botQue = queue.Queue()
