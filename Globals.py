@@ -8,9 +8,14 @@ USERNAME = "bFriend"
 CHANNEL = "nilkin1"
 CLIENT_ID = 'e5ynnitdgyrp79prsv47rm9cuhxwvu'
 
+botCommands = []
+
 threadCount = 0
 botQue = queue.Queue()
 lastMsg = 0.0
+
+maxLineCharCount = 44
+maxCharCount = 500
 
 connected = False
 EveryoneFired = False

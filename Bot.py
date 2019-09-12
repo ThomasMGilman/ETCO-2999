@@ -2,15 +2,28 @@ import socket
 import Globals
 import threading
 import requests
+import os.path;
 import re
 
 class bot:
     botSocket = None
     cfg = None
+
     def __init__(self, cfg):
         # create socket
         self.botSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.cfg = cfg
+        botfile = open(os.path.join(os.getcwd(), "Bot.py"), "r+")
+
+        for line in botfile:
+            #Globals.printLockmsg(line)
+            regex = r"\$.*\""
+            match = re.findall(regex, line) #Globals.printLockmsg()
+            for m in match:
+                if m != str(regex):
+                    Globals.botCommands.append(m[:-1])
+
+        botfile.close()
 
     def closeSocket(self):
         self.botSocket.close()
@@ -62,6 +75,17 @@ class bot:
     def keepAlive(self):
         self.sendMsg("PONG :tmi.twitch.tv")
 
+    def sendCommandInfo(self, User = None):
+        msg = self.addMsgSpacing("Commands:")
+        for i in range(1, len(Globals.botCommands)):
+            if i > 1:
+                msg += ", "
+            msg += Globals.botCommands[i]
+        if User != None:
+            self.privateResponse(User, msg)
+        else:
+            self.channelResponse(msg)
+
     def connect(self):
         # attempt connection
         try:
@@ -70,12 +94,21 @@ class bot:
             self.sendMsg("NICK {0}".format(self.cfg.BOT_USERNAME))
             self.sendMsg("JOIN #{0}".format(self.cfg.CHANNEL))
             self.announceArrival()
+            self.sendCommandInfo()
             self.botSocket.settimeout(10.0)
 
             return True
         except Exception as e:
             print("failed to connect!!! {0}".format(e))
             return False
+
+    def addMsgSpacing(self, msg):
+        numSpacesToAdd = Globals.maxLineCharCount - len(msg)
+        tmp = msg
+        while numSpacesToAdd > 0:
+            tmp += "_"
+            numSpacesToAdd -= 1
+        return tmp
 
     def handleMsg(self):
 
@@ -87,8 +120,13 @@ class bot:
             Globals.printLockmsg("\n{0}: {1}".format(user, message))
             if (message.startswith("$Hello")):
                 self.channelResponse("HI!!!")
+
+            elif(message.startswith("$help")):
+                self.sendCommandInfo(user)
+
             elif (message.startswith("$ColorTxt")):
                 self.channelResponse("/me this is color text!!!")
+
             elif (message.startswith("$ByeFriend")):
                 with Globals.tLock:
                     Globals.printLockmsg("YOUR ALL FIRED!!!")
@@ -97,9 +135,11 @@ class bot:
 
                 self.channelResponse("GoodBye Friends")
                 self.channelResponse("/disconnect")
+
             elif (message.startswith("$cleanUp")):
                 self.channelResponse("/clear")
                 self.channelResponse("All clean!")
+
             elif(message.startswith("$recentClip")):
                 try:
                     url = "https://api.twitch.tv/helix/clips?"+self.cfg.CHANNEL+"="
@@ -110,26 +150,45 @@ class bot:
                     Globals.printLockmsg(data)
                 except Exception as e:
                     Globals.printLockmsg(e)
+
+            elif(message.startswith("$lineCharTest")):
+                msg = ""
+                for i in range(50):
+                    msg += "0123456789"
+                self.channelResponse(msg)
+
             elif (message.startswith("$topGames")):
                 try:
                     url = "https://api.twitch.tv/helix/games/top"
                     req = requests.get(url, headers={'Client-ID': self.cfg.CLIENT_ID})
                     data = req.json()['data']
-                    Globals.printLockmsg(data)
+                    gameRank = 1
+                    for dict in data:
+                        name = self.addMsgSpacing(str(gameRank)+": Name: "+dict.get("name")+" ")
+                        id = self.addMsgSpacing("ID: "+dict.get("id")+" ")
+                        boxartUrl = self.addMsgSpacing("Box_Art_Url: "+dict.get("box_art_url")+" ")
+                        boxartUrl = re.sub("{width}", "1920", boxartUrl)
+                        boxartUrl = re.sub("{height}", "1080", boxartUrl)
+                        self.privateResponse(user, name+id+boxartUrl)
+                        gameRank += 1
                 except Exception as e:
                     Globals.printLockmsg(e)
+
             elif (message.startswith("$Game")):
                 try:
                     gameName = message[re.search(r"\s\w+", message).start()+1:]
                     url = "https://api.twitch.tv/helix/games?name="+gameName
                     req = requests.get(url, headers={'Client-ID': self.cfg.CLIENT_ID})
                     data = req.json()['data']
-                    msg = ""
-                    for i in range(len(data)):
-                        msg += str(i) + ": \n\tID:" + data[i][0] + " Name: " + data[i][1] + "\n"  # appendName List
-                    self.privateResponse(user, msg)
-                    Globals.printLockmsg(data)
+                    for dict in data:
+                        name = self.addMsgSpacing("Name: " + dict.get("name") + " ")
+                        id = self.addMsgSpacing("ID: " + dict.get("id") + " ")
+                        boxartUrl = self.addMsgSpacing("Box_Art_Url: " + dict.get("box_art_url") + " ")
+                        boxartUrl = re.sub("{width}", "1920", boxartUrl)
+                        boxartUrl = re.sub("{height}", "1080", boxartUrl)
+                        self.privateResponse(user, name + id + boxartUrl)
                 except Exception as e:
                     Globals.printLockmsg(e)
+
         with Globals.tLock:
             Globals.threadCount -= 1
